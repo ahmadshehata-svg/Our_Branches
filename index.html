@@ -26,8 +26,6 @@
         color: var(--primary-text-color);
     }
     
-    /* ----- هنا تبدأ الإضافات الجديدة للـ 3D ----- */
-    
     #background-canvas {
         position: fixed;
         top: 0;
@@ -51,7 +49,6 @@
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.5s ease-in-out;
-        /* --- تعديل 1: إضافة Flexbox لتوسيط النص --- */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -61,15 +58,14 @@
         pointer-events: auto;
     }
     
-    /* --- تعديل 2: ستايل النص الذي سيظهر --- */
     .transition-text {
         font-family: 'Merriweather', serif;
-        font-size: clamp(4rem, 10vw, 8rem); /* حجم خط متجاوب */
+        font-size: clamp(4rem, 10vw, 8rem);
         font-weight: 900;
         color: var(--accent-color);
         text-transform: uppercase;
-        opacity: 0; /* يبدأ مخفي */
-        transform: scale(0.8); /* يبدأ بحجم أصغر قليلًا */
+        opacity: 0;
+        transform: scale(0.8);
     }
 
     .locations-section {
@@ -82,6 +78,15 @@
         margin: 40px auto;
         position: relative;
         z-index: 1;
+        /* (الجديد) إخفاء العناصر في البداية لتظهر بالأنيميشن */
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .section-title, .menu-cta, .location-card {
+        /* (الجديد) إخفاء العناصر الفرعية أيضًا */
+        opacity: 0;
+        visibility: hidden;
     }
 
     .section-title {
@@ -154,7 +159,6 @@
 
 <canvas id="background-canvas"></canvas>
 
-<!-- --- تعديل 3: إضافة النص داخل الـ Overlay --- -->
 <div id="transition-overlay">
     <div class="transition-text">MENU</div>
 </div>
@@ -164,11 +168,10 @@
     <h2 class="section-title">Our Branches</h2>
     
     <div class="menu-cta">
-        <a href="https://www.machabess-res.com/home/mune" id="menu-transition-btn">Discover Our Menu</a>
+        <a href="https://heyzine.com/flip-book/11249e7f8a.html#page/1" id="menu-transition-btn">Discover Our Menu</a>
     </div>
 
     <div class="locations-container">
-        <!-- ... ( باقي كروت الفروع كما هي بدون تغيير ) ... -->
         <!-- ===== Zayed Branch ===== -->
         <div class="location-card">
             <div class="card-content">
@@ -193,17 +196,18 @@
                 <h3 class="card-title">Alexandria Branch</h3>
                 <div class="card-details"><p>Fouad St, intersection with Sultan Hussein St, Raml Station, Alexandria.</p></div>
             </div>
-            <iframe class="card-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3412.5517731793125!2d29.903450274477144!3d31.20543916263597!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c37ba871cd63%3A0x6b8bfcada305704e!2z2YXYt9i52YUg2YXYrNin2KjZitizINmE2YTZhdij2YPZiNmE2KfYqiDYp9mE2YPZiNmK2KrZitip!5e0!3m2!1sen!2seg!4v1755187122577!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe class="card-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3412.5517731793125!2d29.903450274477144!3d31.20543916263597!2m3!1f0!2f0!3f0!3m2!i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c37ba871cd63%3A0x6b8bfcada305704e!2z2YXYt9i52YUg2YXYrNin2KjZitizINmE2YTZhdij2YPZiNmE2KfYqiDYp9mE2YPZiNmK2KrZitip!5e0!3m2!1sen!2seg!4v1755187122577!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             <div class="card-actions"><a href="tel:01123456789" class="btn-call">Call Now</a></div>
         </div>
     </div>
 </section>
 
 <script type="module">
+    // استيراد مكتبات Three.js و GSAP
     import * as THREE from 'https://cdn.skypack.dev/three@0.136.0';
     import { gsap } from "https://cdn.skypack.dev/gsap";
 
-    // --- إعداد المشهد الأساسي ---
+    // --- (الكود القديم بدون تغيير) إعداد المشهد الأساسي والخلفية ثلاثية الأبعاد ---
     const canvas = document.querySelector('#background-canvas');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -211,29 +215,17 @@
     const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); 
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    // --- إنشاء الموديل الـ 3D ---
     const geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 150, 20); 
-    const material = new THREE.MeshStandardMaterial({
-        color: '#A94442',
-        metalness: 0.8,
-        roughness: 0.3,
-    });
+    const material = new THREE.MeshStandardMaterial({ color: '#A94442', metalness: 0.8, roughness: 0.3 });
     const model = new THREE.Mesh(geometry, material);
     scene.add(model);
-
-    // --- إضافة الإضاءة ---
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
-    
     let scrollY = window.scrollY;
-    document.addEventListener('scroll', () => {
-        scrollY = window.scrollY;
-    });
-
+    document.addEventListener('scroll', () => { scrollY = window.scrollY; });
     const clock = new THREE.Clock();
     const animate = () => {
         const elapsedTime = clock.getElapsedTime();
@@ -247,34 +239,52 @@
     };
     animate();
 
-    // --- سحر الانتقال عند الضغط على الزرار ---
+    // --- (الكود القديم بدون تغيير) سحر الانتقال عند الضغط على الزرار ---
     const transitionBtn = document.querySelector('#menu-transition-btn');
     const overlay = document.querySelector('#transition-overlay');
-
     transitionBtn.addEventListener('click', (event) => {
         event.preventDefault(); 
         const targetUrl = event.currentTarget.href;
-
         overlay.classList.add('is-active');
-        
-        // --- تعديل 4: إضافة حركة للنص داخل الـ Timeline ---
         gsap.timeline({
-            onComplete: () => {
-                window.location.href = targetUrl;
-            }
+            onComplete: () => { window.location.href = targetUrl; }
         })
         .to(camera.position, { duration: 1.5, z: 0.5, ease: 'power3.in' }, 0)
         .to(model.rotation, { duration: 1.5, x: model.rotation.x + 3, y: model.rotation.y + 5, ease: 'power3.in' }, 0)
         .to(model.scale, { duration: 1.5, x: 2, y: 2, z: 2, ease: 'power3.in' }, 0)
         .to(renderer.domElement, { duration: 0.7, opacity: 1, ease: 'power2.in' }, 0)
-        // السطر الجديد الذي يظهر كلمة MENU
-        .to('.transition-text', { duration: 1.2, opacity: 1, scale: 1, ease: 'power2.out' }, 0.3); // يبدأ بعد 0.3 ثانية من بداية الحركة
+        .to('.transition-text', { duration: 1.2, opacity: 1, scale: 1, ease: 'power2.out' }, 0.3);
     });
 
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // --- (الكود الجديد) حركة الدخول السينمائية عند تحميل الصفحة ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // تحديد العناصر التي سيتم تحريكها
+        const section = '.locations-section';
+        const title = '.section-title';
+        const cta = '.menu-cta';
+        const cards = '.location-card';
+
+        // جعل العناصر مرئية قبل بدء الأنيميشن
+        gsap.set([section, title, cta, cards], { autoAlpha: 1 });
+
+        // إنشاء timeline للتحكم في تسلسل الحركات
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+        tl.from(section, { duration: 1, scale: 0.95, opacity: 0 })
+          .from(title, { duration: 0.8, y: -30, opacity: 0 }, "-=0.6")
+          .from(cta, { duration: 0.8, y: 30, opacity: 0 }, "-=0.6")
+          .from(cards, {
+              duration: 1,
+              y: 50,
+              opacity: 0,
+              stagger: 0.2 // هذا هو السر في ظهورهم "واحد تلو الآخر"
+          }, "-=0.5");
     });
 </script>
 
