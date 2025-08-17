@@ -1,289 +1,242 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <title>Our Restaurant Branches</title>
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+
+    <title>فروع مطعم مجابيس</title>
 <style>
-    /* ----- بداية الستايل (Heritage Theme) ----- */
+    /* ----- بداية الستايل (مستوحى من هوية مجابيس) ----- */
     :root {
-        --bg-color: #FDF6E3;
-        --card-bg-color: #FFFFFF;
-        --primary-text-color: #5D4037;
-        --secondary-text-color: #6D4C41;
-        --accent-color: #A94442;
-        --accent-hover-color: #8C1D18;
+        /* لوحة ألوان مستخلصة من الهوية البصرية */
+        --brand-dark-blue: #0f2c3a; /* الكحلي الغامق */
+        --brand-beige: #d3c2a9;    /* البيج الرملي (لون الخيش) */
+        --brand-cream: #f4f0e6;    /* الكريمي (خلفية الشعار) */
+        --brand-red: #ea202f;      /* الأحمر الصريح */
+        --brand-red-hover: #b8161d; /* أحمر أغمق عند المرور */
+        --brand-gold: #b29a7e;     /* الذهبي المطفي للحدود */
+
+        /* تخصيص الألوان القديمة لتطابق الهوية */
+        --main-bg-color: var(--brand-dark-blue);
+        --card-bg-color: var(--brand-cream);
+        --primary-text-color: var(--brand-dark-blue);
+        --secondary-text-color: #334D6E; /* يمكن الإبقاء عليه أو تغييره */
+        --accent-color: var(--brand-red); 
+        --accent-hover-color: var(--brand-red-hover);
+        --header-bg-color: var(--brand-beige); 
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-        font-family: 'Roboto', sans-serif;
-        background-color: var(--bg-color);
+        font-family: 'Cairo', sans-serif;
+        background-color: var(--main-bg-color);
         color: var(--primary-text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
     }
-    
-    #background-canvas {
+
+    body::before {
+        content: '';
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         z-index: -1; 
-        opacity: 0.15;
+        /* هذا هو النمط الهندسي في خلفية الهوية */
+        background-image: url('photo_2025-08-17_16-33-36.jpg');
+        background-size: 650px;
+        background-repeat: repeat;
+        opacity: 0.1; /* تخفيف الشفافية لتكون لمسة خفيفة */
         pointer-events: none;
-    }
-
-    /* الـ Overlay بتاع الانتقال */
-    #transition-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: var(--bg-color);
-        z-index: 9999;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.5s ease-in-out;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    #transition-overlay.is-active {
-        opacity: 1;
-        pointer-events: auto;
-    }
-    
-    .transition-text {
-        font-family: 'Merriweather', serif;
-        font-size: clamp(4rem, 10vw, 8rem);
-        font-weight: 900;
-        color: var(--accent-color);
-        text-transform: uppercase;
-        opacity: 0;
-        transform: scale(0.8);
     }
 
     .locations-section {
         width: 100%;
         max-width: 1200px;
-        background-color: var(--card-bg-color);
+        background-color: var(--card-bg-color); /* الكريمي */
         border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--header-bg-color);
         overflow: hidden;
         margin: 40px auto;
-        position: relative;
+        position: relative; 
         z-index: 1;
-        /* (الجديد) إخفاء العناصر في البداية لتظهر بالأنيميشن */
         opacity: 0;
         visibility: hidden;
+        isolation: isolate; 
     }
 
-    .section-title, .menu-cta, .location-card {
-        /* (الجديد) إخفاء العناصر الفرعية أيضًا */
-        opacity: 0;
-        visibility: hidden;
+    .locations-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* هذا هو نمط الخيش الخفيف */
+        background-image: url('photo_2025-08-17_16-37-16.jpg');
+        background-size: cover;
+        opacity: 0.04; 
+        z-index: -1;
+    }
+
+    /* --- تصميم الهيدر بهوية مجابيس --- */
+
+    .section-header {
+        padding: 30px 20px;
+        position: relative;
+        border-bottom: 3px solid var(--brand-gold); /* خط ذهبي أكثر سماكة */
+        background-color: var(--header-bg-color); /* البيج الرملي */
     }
 
     .section-title {
-        font-family: 'Merriweather', serif;
-        font-size: 2.5rem;
-        font-weight: 900;
-        color: var(--accent-color);
-        text-align: center;
-        padding: 40px 20px;
-    }
-    
-    .menu-cta {
-        text-align: center;
-        padding: 0 20px 40px;
-    }
-    #menu-transition-btn {
-        display: inline-block;
-        padding: 15px 40px;
-        border-radius: 8px;
-        background-color: var(--primary-text-color);
-        color: #fff;
-        text-decoration: none;
-        font-family: 'Merriweather', serif;
-        font-size: 1.2rem;
+        font-family: 'Aref Ruqaa', serif;
+        font-size: 3.2rem; /* تكبير بسيط للخط */
         font-weight: 700;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        cursor: pointer;
+        color: var(--accent-color); /* اللون الأحمر الصريح للهوية */
+        text-align: center;
+        padding: 0;
+        margin: 0;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15); 
     }
-    #menu-transition-btn:hover {
-        background-color: var(--accent-color);
-        transform: translateY(-3px);
-    }
-    
+
+    /* --- نهاية تعديلات الهيدر --- */
+
     .locations-container {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        padding: 20px;
+        padding: 30px 20px; 
         gap: 20px;
-        border-top: 1px solid #EAE0D5;
     }
 
     .location-card {
         width: 100%;
         max-width: 380px;
-        background-color: var(--card-bg-color);
+        background-color: #FFFFFF;
         border-radius: 15px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         border: 1px solid #EAE0D5;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        opacity: 0; 
+        visibility: hidden; 
     }
 
     .location-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); }
+    
     .card-content { padding: 20px; }
-    .card-title { font-family: 'Merriweather', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary-text-color); margin-bottom: 10px; }
-    .card-details p { font-size: 1rem; color: var(--secondary-text-color); margin-bottom: 15px; line-height: 1.6; }
+    
+    .card-title {
+        font-family: 'Aref Ruqaa', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-text-color); /* اللون الكحلي للهوية */
+        margin-bottom: 10px;
+    }
+
+    .card-details p { font-size: 1.1rem; color: var(--secondary-text-color); margin-bottom: 15px; line-height: 1.7; }
     .card-map { width: 100%; height: 250px; border: none; }
     .card-actions { padding: 20px; text-align: center; background-color: #FAFAFA; border-top: 1px solid #EAE0D5; }
-    .btn-call { display: inline-block; padding: 12px 24px; border-radius: 50px; background-color: var(--accent-color); color: #fff; text-decoration: none; font-weight: 700; transition: background-color 0.3s ease; }
+    
+    .btn-call {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: 50px;
+        background-color: var(--accent-color); /* اللون الأحمر الصريح للهوية */
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease;
+    }
+
     .btn-call:hover { background-color: var(--accent-hover-color); }
+    .btn-call i { margin-right: 8px; }
 
     @media (max-width: 768px) {
-        .locations-container { flex-direction: column; align-items: center; }
+        body { padding: 10px; }
+        .locations-container { flex-direction: column; align-items: center; padding: 20px 15px; }
+        .section-title { font-size: 2.5rem; }
+        .card-title { font-size: 1.8rem; }
     }
 </style>
 </head>
 <body>
 
-<canvas id="background-canvas"></canvas>
-
-<div id="transition-overlay">
-    <div class="transition-text">MENU</div>
-</div>
-
-
 <section class="locations-section">
-    <h2 class="section-title">Our Branches</h2>
+    <header class="section-header">
+        <h2 class="section-title">فروعنــــا</h2>
+    </header>
     
-    <div class="menu-cta">
-        <a href="https://heyzine.com/flip-book/11249e7f8a.html#page/1" id="menu-transition-btn">Discover Our Menu</a>
-    </div>
-
     <div class="locations-container">
-        <!-- ===== Zayed Branch ===== -->
+        <!-- ===== فرع الشيخ زايد ===== -->
         <div class="location-card">
             <div class="card-content">
-                <h3 class="card-title">Zayed Branch</h3>
-                <div class="card-details"><p>13th District, 2nd Neighborhood, next to Arkan Plaza Mall, Sheikh Zayed.</p></div>
+                <h3 class="card-title">فرع الشيخ زايد</h3>
+                <div class="card-details"><p>الحي 13، المجاورة الثانية، بجوار مول أركان بلازا، الشيخ زايد.</p></div>
             </div>
             <iframe class="card-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d372.9711058031504!2d31.038146847225896!3d30.038318757139166!2m3!1f0!2f0!3f0!3m2!i1024!2i768!4f13.1!3m3!1m2!1s0x14585be94e5c692b%3A0xc500892432de8fb1!2z2YXYt9i52YUg2YXYrNin2KjZitizINmE2YTZhdij2YPZiNmE2KfYqiDYp9mE2YPZiNmK2KrZitip!5e0!3m2!1sen!2seg!4v1755186672377!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <div class="card-actions"><a href="tel:01027527593" class="btn-call">Call Now</a></div>
+            <div class="card-actions"><a href="tel:01027527593" class="btn-call"><i class="fas fa-phone-alt"></i> اتصل الآن</a></div>
         </div>
-        <!-- ===== Dokki Branch ===== -->
+        <!-- ===== فرع الدقي ===== -->
         <div class="location-card">
             <div class="card-content">
-                <h3 class="card-title">Dokki Branch</h3>
-                <div class="card-details"><p>15 Mossadak St, off Mohi El Din Abu El Ezz, Dokki, Giza.</p></div>
+                <h3 class="card-title">فرع الدقي</h3>
+                <div class="card-details"><p>15 شارع مصدق، من شارع محي الدين أبو العز، الدقي، الجيزة.</p></div>
             </div>
-            <iframe class="card-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d810.2815702248878!2d31.216525280071536!3d30.04415607590285!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1458417258bf37db%3A0xfb7636728e9e78c!2z2YXYt9i52YUg2YXYrNin2KjZitizINmE2YTZhdin2YPZiNmE2KfYqiDYp9mE2YPZiNmK2KrZitip!5e0!3m2!1sen!2seg!4v1755187044626!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <div class="card-actions"><a href="tel:01205062966" class="btn-call">Call Now</a></div>
+            <iframe class="card-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d810.2815702248878!2d31.216525280071536!3d30.04415607590285!2m3!1f0!2f0!3f0!3m2!i1024!2i768!4f13.1!3m3!1m2!1s0x1458417258bf37db%3A0xfb7636728e9e78c!2z2YXYt9i52YUg2YXYrNin2KjZitizINmE2YTZhdin2YPZiNmE2KfYqiDYp9mE2YPZiNmK2KrZitip!5e0!3m2!1sen!2seg!4v1755187044626!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="card-actions"><a href="tel:01205062966" class="btn-call"><i class="fas fa-phone-alt"></i> اتصل الآن</a></div>
         </div>
-        <!-- ===== Alexandria Branch ===== -->
+        <!-- ===== فرع الإسكندرية ===== -->
         <div class="location-card">
             <div class="card-content">
-                <h3 class="card-title">Alexandria Branch</h3>
-                <div class="card-details"><p>Fouad St, intersection with Sultan Hussein St, Raml Station, Alexandria.</p></div>
+                <h3 class="card-title">فرع الإسكندرية</h3>
+                <div class="card-details"><p>شارع فؤاد، تقاطع شارع السلطان حسين، محطة الرمل، الإسكندرية.</p></div>
             </div>
             <iframe class="card-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3412.5517731793125!2d29.903450274477144!3d31.20543916263597!2m3!1f0!2f0!3f0!3m2!i1024!2i768!4f13.1!3m3!1m2!1s0x14f5c37ba871cd63%3A0x6b8bfcada305704e!2z2YXYt9i52YUg2YXYrNin2KjZitizINmE2YTZhdij2YPZiNmE2KfYqiDYp9mE2YPZiNmK2KrZitip!5e0!3m2!1sen!2seg!4v1755187122577!5m2!1sen!2seg" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <div class="card-actions"><a href="tel:01123456789" class="btn-call">Call Now</a></div>
+            <div class="card-actions"><a href="tel:01123456789" class="btn-call"><i class="fas fa-phone-alt"></i> اتصل الآن</a></div>
         </div>
     </div>
 </section>
 
 <script type="module">
-    // استيراد مكتبات Three.js و GSAP
-    import * as THREE from 'https://cdn.skypack.dev/three@0.136.0';
+    // استيراد مكتبة GSAP للتحريك
     import { gsap } from "https://cdn.skypack.dev/gsap";
 
-    // --- (الكود القديم بدون تغيير) إعداد المشهد الأساسي والخلفية ثلاثية الأبعاد ---
-    const canvas = document.querySelector('#background-canvas');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 5; 
-    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); 
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    const geometry = new THREE.TorusKnotGeometry(1.2, 0.4, 150, 20); 
-    const material = new THREE.MeshStandardMaterial({ color: '#A94442', metalness: 0.8, roughness: 0.3 });
-    const model = new THREE.Mesh(geometry, material);
-    scene.add(model);
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
-    let scrollY = window.scrollY;
-    document.addEventListener('scroll', () => { scrollY = window.scrollY; });
-    const clock = new THREE.Clock();
-    const animate = () => {
-        const elapsedTime = clock.getElapsedTime();
-        model.rotation.x = elapsedTime * 0.1;
-        model.rotation.y = elapsedTime * 0.2;
-        camera.position.y = -scrollY / window.innerHeight * 2;
-        model.rotation.x += scrollY * 0.0005;
-        model.rotation.y += scrollY * 0.001;
-        renderer.render(scene, camera);
-        window.requestAnimationFrame(animate);
-    };
-    animate();
-
-    // --- (الكود القديم بدون تغيير) سحر الانتقال عند الضغط على الزرار ---
-    const transitionBtn = document.querySelector('#menu-transition-btn');
-    const overlay = document.querySelector('#transition-overlay');
-    transitionBtn.addEventListener('click', (event) => {
-        event.preventDefault(); 
-        const targetUrl = event.currentTarget.href;
-        overlay.classList.add('is-active');
-        gsap.timeline({
-            onComplete: () => { window.location.href = targetUrl; }
-        })
-        .to(camera.position, { duration: 1.5, z: 0.5, ease: 'power3.in' }, 0)
-        .to(model.rotation, { duration: 1.5, x: model.rotation.x + 3, y: model.rotation.y + 5, ease: 'power3.in' }, 0)
-        .to(model.scale, { duration: 1.5, x: 2, y: 2, z: 2, ease: 'power3.in' }, 0)
-        .to(renderer.domElement, { duration: 0.7, opacity: 1, ease: 'power2.in' }, 0)
-        .to('.transition-text', { duration: 1.2, opacity: 1, scale: 1, ease: 'power2.out' }, 0.3);
-    });
-
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    // --- (الكود الجديد) حركة الدخول السينمائية عند تحميل الصفحة ---
+    // --- حركة الدخول السينمائية عند تحميل الصفحة ---
     document.addEventListener('DOMContentLoaded', () => {
         // تحديد العناصر التي سيتم تحريكها
         const section = '.locations-section';
         const title = '.section-title';
-        const cta = '.menu-cta';
         const cards = '.location-card';
 
         // جعل العناصر مرئية قبل بدء الأنيميشن
-        gsap.set([section, title, cta, cards], { autoAlpha: 1 });
+        gsap.set([section, title, cards], { autoAlpha: 1 });
 
         // إنشاء timeline للتحكم في تسلسل الحركات
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
         tl.from(section, { duration: 1, scale: 0.95, opacity: 0 })
           .from(title, { duration: 0.8, y: -30, opacity: 0 }, "-=0.6")
-          .from(cta, { duration: 0.8, y: 30, opacity: 0 }, "-=0.6")
           .from(cards, {
               duration: 1,
               y: 50,
               opacity: 0,
-              stagger: 0.2 // هذا هو السر في ظهورهم "واحد تلو الآخر"
+              stagger: 0.2
           }, "-=0.5");
     });
 </script>
